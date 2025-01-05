@@ -16,5 +16,3 @@
 <p><img align="left" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact" alt="imfelieoliveira" /></p>
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&locale=en" alt="imfelieoliveira" /></p>
-
-<p><img align="center" src="https://github-readme-stats-flipperweels-projects.vercel.app/?user=ImFelipeOliveira&" alt="imfelieoliveira" /></p>
