@@ -17,4 +17,4 @@
 
 <p>&nbsp;<img align="center" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=imfelieoliveira&show_icons=true&locale=en" alt="imfelieoliveira" /></p>
 
-<p><img align="center" src="https://github-readme-streak-stats.herokuapp.com/?user=imfelieoliveira&" alt="imfelieoliveira" /></p>
+<p><img align="center" src="https://github-readme-stats-flipperweels-projects.vercel.app/?user=imfelieoliveira&" alt="imfelieoliveira" /></p>
