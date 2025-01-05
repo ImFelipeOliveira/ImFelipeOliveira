@@ -1,5 +1,8 @@
-<h1 align="center"><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=900&size=25&pause=1000&width=435&lines=Hi+%F0%9F%91%8B%2C+I'm+Felipe+Oliveira" alt="Typing SVG" /></a></h1>
-<h3 align="center">A FullStack developer from Brasil</h3>
+<div align="center">
+  <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=900&size=25&pause=1000&width=435&lines=Hi+%F0%9F%91%8B%2C+I'm+Felipe+Oliveira" alt="Typing SVG" /></a>
+  <h3>A FullStack developer from Brasil</h3>
+</div>
+
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=imfelieoliveira&label=Profile%20views&color=0e75b6&style=flat" alt="imfelieoliveira" /> </p>
 
