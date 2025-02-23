@@ -11,7 +11,7 @@
 
 ## 🛠️ Languages and Tools
 <p>
-  <img src="https://skillicons.dev/icons?i=python,django,git,typescript,postgres,linux,docker,bash,ts,react,nextjs,vim,vite" />
+  <img src="https://skillicons.dev/icons?i=python,golang,django,git,typescript,postgres,linux,docker,bash,ts,react,nextjs,vim,vite" />
 </p>
 
 
