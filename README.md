@@ -13,7 +13,7 @@
 </p>
 
 ## 🛠️ Languages and Tools
-<table>
+<table align="center">
   <tr>
     <th>Frontend</th>
     <th>Backend</th>
