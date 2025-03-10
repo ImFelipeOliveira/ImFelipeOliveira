@@ -48,3 +48,7 @@
   <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=gruvbox&locale=en" alt="ImFelipeOLiveira" />
   
 </p>
+
+<div align='center'>
+  <img src='https://github.com/ImFelipeOliveira/ImFelipeOliveira/blob/output/github-contribution-grid-snake-dark.svg' />
+</div>
