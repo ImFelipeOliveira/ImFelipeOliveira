@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=900&size=25&duration=3000&pause=1000&center=true&multiline=true&repeat=false&width=460&height=75&lines=Hi+%F0%9F%91%8B%2C+I'm+Felipe+Oliveira;A+FullStack+developer+from+Brasil" alt="Typing SVG" /></a>
+  <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=900&size=25&duration=3000&pause=1000&center=true&multiline=true&repeat=false&width=460&height=75&lines=Hi+%F0%9F%91%8B%2C+I'm+Felipe+Oliveira;A+FullStack+developer" alt="Typing SVG" /></a>
 </div>
 
 - ⚡ Fun fact **I like jiu-jitsu and puzzles like the Rubik's cube.**
@@ -10,9 +10,30 @@
 </p>
 
 ## 🛠️ Languages and Tools
-<p>
-  <img src="https://skillicons.dev/icons?i=python,golang,django,git,typescript,postgres,linux,docker,bash,ts,react,nextjs,vim,vite" />
-</p>
+<table>
+  <tr>
+    <th>Frontend</th>
+    <th>Backend</th>
+    <th>Operations</th>
+  </tr>
+  <tr>
+    <td align="top" width="25%">
+      <p>
+          <img src="https://skillicons.dev/icons?i=html,css,tailwind,react&perline=4" />
+      </p>
+    </td>
+    <td align="top" width="25%">
+      <p>
+          <img src="https://skillicons.dev/icons?i=python,django,typescript,nextjs,golang" />
+      </p>
+    </td>
+    <td align="top" width="25%">
+      <p>
+        <img src="https://skillicons.dev/icons?i=linux,git,docker,vim,vite,npm,pnpm&perline=4" />
+      </p>
+    </td>
+  </tr>
+</table>
 
 
 # 📈 GitHub Stats
