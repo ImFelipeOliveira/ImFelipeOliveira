@@ -2,7 +2,10 @@
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F79F29&width=435&lines=E+a%C3%AD!+Seja+bem-vindo(a)+ao+meu+perfil+do+GitHub." alt="Typing SVG" /></a>
 </div>
 
-- ⚡ Fun fact **I like jiu-jitsu and puzzles like the Rubik's cube.**
+<div>
+  <image src="https://github.com/user-attachments/assets/4e5b2b67-6603-4938-b0f2-89feed400c7c" width="100%" />
+</div>
+
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
