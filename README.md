@@ -37,8 +37,8 @@
 
 <p align="center">
   
-  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact&theme=gruvbox" alt="ImFelipeOliveira" />
-  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=gruvbox&locale=en" alt="ImFelipeOLiveira" />
+  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact&theme=noctis_minimus" alt="ImFelipeOliveira" />
+  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=noctis_minimus&locale=en" alt="ImFelipeOLiveira" />
   
 </p>
 
