@@ -1,6 +1,10 @@
 
-
-
+<h2 align="left">EcoTrade Co-founder</h2>
+<p align="left">
+  <a href="https://github.com/EcoTrade-Organization/ecotrade-backend" target="blank">
+    <img align="center" src="https://avatars.githubusercontent.com/u/231285474?s=48&v=4"/>
+  </a>
+</p>
 <h3 align="left">Connect with me:</h3>
 <p align="left">
 <a href="www.linkedin.com/in/felipe-oliveira-384b00265" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="felipe oliveira" height="30" width="40" /></a>
