@@ -4,6 +4,7 @@
 </div>
 
 <p align="center">
+  <img src='https://github-readme-streak-stats-gold.vercel.app?user=ImFelipeOliveira&theme=transparent&date_format=j%20M%5B%20Y%5D' /><br>
   <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact&theme=transparent" alt="ImFelipeOliveira" />
   <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=transparent&locale=en" alt="ImFelipeOLiveira" />
   
