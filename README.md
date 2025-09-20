@@ -4,8 +4,8 @@
 </div>
 
 <p align="center">
-  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact&theme=shadow_red" alt="ImFelipeOliveira" />
-  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=shadow_red&locale=en" alt="ImFelipeOLiveira" />
+  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api/top-langs?username=ImFelipeOliveira&show_icons=true&locale=en&layout=compact&theme=transparent" alt="ImFelipeOliveira" />
+  <img height="180em" width="48%" src="https://github-readme-stats-flipperweels-projects.vercel.app/api?username=ImFelipeOliveira&show_icons=true&theme=transparent&locale=en" alt="ImFelipeOLiveira" />
   
 </p>
 
