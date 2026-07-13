@@ -129,6 +129,15 @@ for _ in range(int(W*H/2600)):
         f'<animate attributeName="opacity" values="{base};{round(min(1,base+0.35),2)};{base}" '
         f'dur="{dur}s" begin="{beg}s" repeatCount="indefinite"/></rect>')
 
+# shooting stars (hero region)
+for sx, sy, dx, dy, delay in [(140, 40, 90, 42, 2.0), (560, 66, -74, 34, 7.5), (300, 168, 82, -28, 12.0)]:
+    add(f'<line x1="{sx}" y1="{sy}" x2="{sx-dx*0.3:.0f}" y2="{sy-dy*0.3:.0f}" stroke="{STAR}" '
+        f'stroke-width="1.5" opacity="0">'
+        f'<animate attributeName="opacity" values="0;0.9;0" dur="1s" begin="{delay}s" '
+        f'repeatCount="indefinite" keyTimes="0;0.3;1"/>'
+        f'<animateTransform attributeName="transform" type="translate" values="0 0;{dx} {dy}" '
+        f'dur="1s" begin="{delay}s" repeatCount="indefinite"/></line>')
+
 # section dividers
 for yy in (Y_STACK, Y_STATS, Y_NOW, Y_FOOT):
     add(f'<line x1="0" y1="{yy}" x2="{W}" y2="{yy}" stroke="#1a1a3a" stroke-width="1"/>')
@@ -186,27 +195,61 @@ for num, lbl, fire in [(f"{data['total']:,}".replace(",", " "), "CONTRIBUTIONS",
                        (data["followers"], "FOLLOWERS", False)]:
     tile(tx, Y_STATS+58, int(tw2), num, lbl, fire)
     tx += tw2 + 16
-# contribution grid (real data)
+# contribution grid (real data) with a snake that eats the cells
 gx, gy = 40, Y_STATS + 150
 cell, gap = 11, 3
+step = cell + gap
+NW = len(data["weeks"])
+EMPTY = "#12122e"
 def level(n):
-    if n == 0: return None
+    if n == 0: return EMPTY
     if n <= 3: return "#4d3413"
     if n <= 9: return "#8a5a1e"
     if n <= 20: return "#cc8a34"
     return AMBER
+
+# serpentine path over the 7 x NW lattice (row 0 →, row 1 ←, ...)
+N_SEG, SPACING, DUR = 5, 1, 16.0
+P = 7 * NW
+cellT = DUR / P
+order, pts = [], []
+for di in range(7):
+    cols = range(NW) if di % 2 == 0 else range(NW - 1, -1, -1)
+    for wi in cols:
+        order.append((wi, di))
+        pts.append((gx + wi*step + cell/2, gy + di*step + cell/2))
+kindex = {wd: k for k, wd in enumerate(order)}
+path_d = "M " + " L ".join(f"{x:.0f},{y:.0f}" for x, y in pts)
+
+# cells — each lit cell "empties" the instant the snake head passes it
 for wi, wk in enumerate(data["weeks"]):
     for di, dd in enumerate(wk["contributionDays"]):
         col = level(dd["contributionCount"])
-        px, py = gx + wi*(cell+gap), gy + di*(cell+gap)
-        if col is None:
-            add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="#12122e"/>')
-        elif col == AMBER:
-            add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{AMBER}">'
-                f'<animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" '
-                f'begin="{round((wi%7)*0.3,1)}s" repeatCount="indefinite"/></rect>')
-        else:
-            add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}"/>')
+        px, py = gx + wi*step, gy + di*step
+        if col == EMPTY:
+            add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{EMPTY}"/>')
+            continue
+        k = kindex.get((wi, di), 0)
+        p = ((k - (N_SEG - 1)*SPACING) % P) / P          # phase when head arrives
+        p1 = min(max(p - 0.010, 0.001), 0.93)
+        p2 = min(max(p, p1 + 0.001), 0.95)
+        p3 = min(p2 + 0.05, 0.99)
+        add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}">'
+            f'<animate attributeName="fill" dur="{DUR}s" repeatCount="indefinite" '
+            f'keyTimes="0;{p1:.3f};{p2:.3f};{p3:.3f};1" '
+            f'values="{col};{col};{EMPTY};{col};{col}"/></rect>')
+
+# the snake, on top of the grid
+for i in range(N_SEG):
+    begin = -((N_SEG - 1 - i) * SPACING * cellT)
+    if i == 0:
+        add(f'<g><animateMotion path="{path_d}" dur="{DUR}s" repeatCount="indefinite" begin="{begin:.3f}s"/>'
+            f'<rect x="{-cell/2-2:.0f}" y="{-cell/2-2:.0f}" width="{cell+4}" height="{cell+4}" rx="4" fill="{AMBER}" opacity="0.35"/>'
+            f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" fill="#ffe0a8"/></g>')
+    else:
+        add(f'<g><animateMotion path="{path_d}" dur="{DUR}s" repeatCount="indefinite" begin="{begin:.3f}s"/>'
+            f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" '
+            f'fill="{AMBER}" opacity="{round(1 - i*0.15, 2)}"/></g>')
 
 # ---------- NOW ----------
 heading(40, Y_NOW+42, "whoami", "--now")
@@ -214,7 +257,7 @@ lines = [
     ("\U0001F6F0", "Shipping billing & payments infra at Orange Labs — usebill"),
     ("\U0001F331", "Going deep on Kubernetes & distributed systems"),
     ("\U0001F30C", "After hours: tinkering with Go & systems programming"),
-    ("\U0001F4E1", "Ping me: flipeaz342@gmail.com"),
+    ("\U0001F4E1", "Ping me: felipe.dev2148@gmail.com"),
 ]
 yy = Y_NOW + 78
 for ic, txt in lines:

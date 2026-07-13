@@ -13,7 +13,7 @@
 
 <br/><br/>
 
-<a href="mailto:flipeaz342@gmail.com"><img src="https://img.shields.io/badge/email-flipeaz342@gmail.com-1D2021?style=flat-square&logo=gmail&logoColor=f0a742&labelColor=f0a742&color=1D2021" alt="email" /></a>
+<a href="mailto:felipe.dev2148@gmail.com"><img src="https://img.shields.io/badge/email-felipe.dev2148@gmail.com-1D2021?style=flat-square&logo=gmail&logoColor=f0a742&labelColor=f0a742&color=1D2021" alt="email" /></a>
 &nbsp;
 <a href="https://usebill.com.br"><img src="https://img.shields.io/badge/%E2%86%97%20usebill.com.br-1D2021?style=flat-square&labelColor=f0a742&color=1D2021" alt="usebill" /></a>
 &nbsp;
