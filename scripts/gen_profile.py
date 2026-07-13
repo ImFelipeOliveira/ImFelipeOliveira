@@ -98,13 +98,11 @@ add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="
 # ---- CSS (GitHub animates CSS keyframes in <img> SVGs; it ignores SMIL) ----
 add('<style>'
     '@keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}'
-    '@keyframes move{from{offset-distance:0%}to{offset-distance:100%}}'
     '@keyframes shoot{0%{opacity:0;transform:translate(0,0)}12%{opacity:.95}42%{opacity:0}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}'
     '@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}'
     '@keyframes flick{0%,100%{opacity:.3}50%{opacity:1}}'
     '@keyframes fuel{0%,100%{opacity:.5}50%{opacity:1}}'
     '@keyframes steam{0%{opacity:0;transform:translateY(0)}30%{opacity:.7}100%{opacity:0;transform:translateY(-9px)}}'
-    '.seg{offset-rotate:0deg;animation:move ' + f'{DUR}s' + ' linear infinite}'
     '@media(prefers-reduced-motion:reduce){*{animation:none!important}}'
     '</style>')
 
@@ -220,38 +218,41 @@ for _ in range(n-1):
         if d < bd: bd, best = d, j
     tour.append(best); used[best] = True; cur = best
 
-# offset-distance advances by PATH LENGTH, so a cell must empty at its
-# cumulative-length fraction — not its ordinal index — or the vanishing runs
-# ahead of / behind the head. Fade opacity to reveal the empty backdrop, and
-# hold it empty until the loop resets. Head is the timing reference (delay 0).
-N_SEG, cellT = 6, DUR/max(n, 1)
-tpts = [(filled[j][3], filled[j][4]) for j in tour]
-cum = [0.0]*n
-for i in range(1, n):
-    cum[i] = cum[i-1] + math.hypot(tpts[i][0]-tpts[i-1][0], tpts[i][1]-tpts[i-1][1])
-total = cum[-1] or 1.0
-kf, cellrects = [], []
+# Snake + eat share ONE percentage timeline: the head visits tour cell k at
+# (k/(n-1))% via a transform keyframe, and cell k vanishes at that same % —
+# synced by construction, no arc-length/offset-path anchor guesswork. Only
+# transform + opacity, which animate reliably on GitHub. Cell fades to reveal
+# the empty backdrop and stays empty until the tour restarts.
+N_SEG = 6
+stepp = 100.0 / max(n-1, 1)
+snake_stops, kf, cellrects = [], [], []
 for order_pos, j in enumerate(tour):
     wi, di, col, cx, cy, px, py = filled[j]
-    p1 = round(min(cum[order_pos]/total*100, 99.8), 2)
-    p2 = round(min(p1 + 0.1, 99.9), 2)
+    pct = round(order_pos * stepp, 3)
+    snake_stops.append(f'{pct}%{{transform:translate({cx:.0f}px,{cy:.0f}px)}}')
+    p1 = round(min(max(pct, 0.3), 99.7), 3)
+    p2 = round(min(p1 + 0.15, 99.85), 3)
     kf.append(f'@keyframes e{order_pos}{{0%,{p1}%{{opacity:1}}{p2}%,100%{{opacity:0}}}}')
     cellrects.append(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}" '
                      f'style="animation:e{order_pos} {DUR}s linear infinite"/>')
+kf.append('@keyframes snake{' + ''.join(snake_stops) + '}')
 add('<style>' + ''.join(kf) + '</style>')
 for r in cellrects:
     add(r)
 
-# motion path through the tour
-path_d = "M " + " L ".join(f"{cx0[j]:.0f},{cy0[j]:.0f}" for j in tour)
+# snake segments (transform-driven). Head = delay 0 (the timing reference);
+# body segments trail by one tour cell each. fill-mode backwards holds them at
+# the start cell during their initial delay (no flash at the SVG origin).
+seg_dt = DUR / max(n-1, 1)   # seconds per tour cell
 for i in range(N_SEG):
-    delay = i * cellT   # head (i=0) is the reference; body segments trail it
+    d = i * seg_dt
+    anim = f'animation:snake {DUR}s linear infinite backwards;animation-delay:{d:.3f}s'
     if i == 0:
-        add(f'<g class="seg" style="offset-path:path(\'{path_d}\');animation-delay:{delay:.2f}s">'
+        add(f'<g style="{anim}">'
             f'<rect x="{-cell/2-2:.0f}" y="{-cell/2-2:.0f}" width="{cell+4}" height="{cell+4}" rx="4" fill="{AMBER}" opacity="0.35"/>'
             f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" fill="#ffe0a8"/></g>')
     else:
-        add(f'<g class="seg" style="offset-path:path(\'{path_d}\');animation-delay:{delay:.2f}s">'
+        add(f'<g style="{anim}">'
             f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" fill="{AMBER}" opacity="{round(1-i*0.13,2)}"/></g>')
 
 # ---------- NOW ----------
