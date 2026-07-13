@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=24&duration=2800&pause=900&color=F0A742&center=true&vCenter=true&width=760&height=72&lines=FELIPE+OLIVEIRA" alt="Felipe Oliveira" />
+<img src="https://raw.githubusercontent.com/ImFelipeOliveira/ImFelipeOliveira/main/assets/hero.svg" alt="Felipe Oliveira — Backend Engineer" width="100%" />
 
-<img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=13&duration=2400&pause=700&color=4AD9E4&center=true&vCenter=true&width=680&height=42&lines=Backend+Engineer;PHP+%C2%B7+TypeScript+%C2%B7+Python;Scaling+on+Kubernetes;Probably+making+coffee" alt="roles" />
+<img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=13&duration=2400&pause=700&color=4AD9E4&center=true&vCenter=true&width=680&height=42&lines=building+payment+systems;PHP+%C2%B7+TypeScript+%C2%B7+Python;scaling+on+Kubernetes;probably+making+coffee" alt="roles" />
 
 <br/>
 
@@ -57,12 +57,12 @@ I build the **backends that move money** — payments &amp; billing infrastructu
 
 <div align="center">
 
-<img height="165" src="https://github-readme-stats.vercel.app/api?username=imfelipeoliveira&show_icons=true&count_private=true&hide_border=true&title_color=f0a742&icon_color=4ad9e4&text_color=c7c7ee&bg_color=0a0a1a" alt="stats" />
-<img height="165" src="https://github-readme-stats.vercel.app/api/top-langs?username=imfelipeoliveira&layout=compact&hide_border=true&title_color=f0a742&text_color=c7c7ee&bg_color=0a0a1a" alt="top languages" />
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=imfelipeoliveira&theme=gruvbox" alt="profile summary" width="80%" />
 
 <br/>
 
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=imfelipeoliveira&hide_border=true&background=0a0a1a&ring=f0a742&fire=f0a742&currStreakNum=f0a742&currStreakLabel=f0a742&sideNums=c7c7ee&sideLabels=4ad9e4&dates=8a8ac0" alt="streak" />
+<img height="185" src="https://github-readme-streak-stats.herokuapp.com/?user=imfelipeoliveira&hide_border=true&background=1D2021&ring=F0A742&fire=FE8019&currStreakNum=F0A742&currStreakLabel=F0A742&sideNums=EBDBB2&sideLabels=83A598&dates=928374&stroke=3C3836" alt="streak" />
+<img height="185" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=imfelipeoliveira&theme=gruvbox" alt="languages" />
 
 </div>
 
