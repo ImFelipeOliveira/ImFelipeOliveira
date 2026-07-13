@@ -90,7 +90,7 @@ def tile(x, y, w, num, label, fire=False):
 
 # ==== build ====
 data = load()
-DUR = 20.0  # snake loop seconds
+DUR = 50.0  # snake loop seconds (whole grid eaten over this span)
 
 add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
     f'role="img" aria-label="Felipe Oliveira — Backend Engineer profile">')
