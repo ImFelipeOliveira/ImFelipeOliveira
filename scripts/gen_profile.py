@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Render the ENTIRE GitHub profile as one continuous pixel/space SVG.
 
-Reads real data from assets/data.json (produced by scripts/fetch_data.sh)
-and writes assets/profile.svg. Static output -> regenerate via the Action.
+Animations are CSS @keyframes (GitHub renders CSS in <img> SVGs but ignores SMIL).
+The contribution snake follows a nearest-neighbour tour over the *filled* cells,
+so it weaves through real contributions and skips empty days.
+
+Reads assets/data.json (scripts/fetch_data.sh) -> writes assets/profile.svg.
 """
-import json, random, os, sys
+import json, random, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "assets", "data.json")
 OUTP = os.path.join(ROOT, "assets", "profile.svg")
 
 AMBER, MAGENTA, CYAN, STAR, MUTED = "#f0a742", "#ff5c8a", "#4ad9e4", "#e8ecff", "#8a8ac0"
-INK = "#c7c7ee"
+INK, EMPTY = "#c7c7ee", "#12122e"
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 
 FONT = {
@@ -30,15 +33,13 @@ ROCKET = ["..a..",".aaa.",".aca.",".aaa.",".aaa.","b.a.b","f.f.f",".fff.","..f..
 ROCKET_PAL = {"a": "#d8dcf0", "c": CYAN, "b": MAGENTA, "f": AMBER}
 
 W = 820
-Y_HERO, Y_STACK, Y_STATS, Y_NOW = 0, 258, 516, 792
-Y_FOOT = 982
+Y_HERO, Y_STACK, Y_STATS, Y_NOW, Y_FOOT = 0, 258, 516, 792, 982
 H = 1052
 
 s = []
 def add(x): s.append(x)
 def esc(t): return t.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
-# ---- data ----
 def load():
     d = json.load(open(DATA))["data"]["user"]
     cal = d["contributionsCollection"]["contributionCalendar"]
@@ -48,19 +49,14 @@ def load():
     for dd in days:
         if dd["contributionCount"] > 0: c += 1; lon = max(lon, c)
         else: c = 0
-    return {
-        "total": cal["totalContributions"],
-        "repos": d["repositories"]["totalCount"],
-        "followers": d["followers"]["totalCount"],
-        "longest": lon,
-        "weeks": weeks,
-    }
+    return {"total": cal["totalContributions"], "repos": d["repositories"]["totalCount"],
+            "followers": d["followers"]["totalCount"], "longest": lon, "weeks": weeks}
 
-# ---- shared drawing ----
+# ---- drawing helpers ----
 def heading(x, y, prompt, label):
     add(f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="15" font-weight="700">'
         f'<tspan fill="{AMBER}">&gt; {esc(prompt)}</tspan><tspan fill="{CYAN}"> {esc(label)}</tspan></text>')
-    add(f'<line x1="{x+ (len(prompt)+len(label))*9 + 30}" y1="{y-5}" x2="{W-40}" y2="{y-5}" '
+    add(f'<line x1="{x+(len(prompt)+len(label))*9+30}" y1="{y-5}" x2="{W-40}" y2="{y-5}" '
         f'stroke="{CYAN}" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="4 4"/>')
 
 def glyphs(text, p, x0, y0, face, shadow=None, hi=None):
@@ -89,84 +85,77 @@ def chip(x, y, text, bg, fg, star=False):
 
 def tile(x, y, w, num, label, fire=False):
     add(f'<rect x="{x}" y="{y}" width="{w}" height="72" rx="4" fill="#0e0e26" stroke="#2a2a55" stroke-width="1.5"/>')
-    col = AMBER if fire else STAR
-    add(f'<text x="{x+w/2:.0f}" y="{y+38}" text-anchor="middle" font-family="{MONO}" font-size="26" font-weight="800" fill="{col}">{esc(str(num))}</text>')
+    add(f'<text x="{x+w/2:.0f}" y="{y+38}" text-anchor="middle" font-family="{MONO}" font-size="26" font-weight="800" fill="{AMBER if fire else STAR}">{esc(str(num))}</text>')
     add(f'<text x="{x+w/2:.0f}" y="{y+58}" text-anchor="middle" font-family="{MONO}" font-size="10" letter-spacing="1" fill="{MUTED}">{esc(label)}</text>')
 
 # ==== build ====
 data = load()
+DUR = 20.0  # snake loop seconds
 
 add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
     f'role="img" aria-label="Felipe Oliveira — Backend Engineer profile">')
+
+# ---- CSS (GitHub animates CSS keyframes in <img> SVGs; it ignores SMIL) ----
+add('<style>'
+    '@keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}'
+    '@keyframes eat{0%{opacity:.1}7%{opacity:1}100%{opacity:1}}'
+    '@keyframes move{from{offset-distance:0%}to{offset-distance:100%}}'
+    '@keyframes shoot{0%{opacity:0;transform:translate(0,0)}12%{opacity:.95}42%{opacity:0}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}'
+    '@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}'
+    '@keyframes flick{0%,100%{opacity:.3}50%{opacity:1}}'
+    '@keyframes fuel{0%,100%{opacity:.5}50%{opacity:1}}'
+    '@keyframes steam{0%{opacity:0;transform:translateY(0)}30%{opacity:.7}100%{opacity:0;transform:translateY(-9px)}}'
+    '.seg{offset-rotate:0deg;animation:move ' + f'{DUR}s' + ' linear infinite}'
+    '@media(prefers-reduced-motion:reduce){*{animation:none!important}}'
+    '</style>')
+
 add('<defs>'
     '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#0c0c24"/><stop offset="0.5" stop-color="#0a0a1a"/>'
     '<stop offset="1" stop-color="#060615"/></linearGradient>'
-    f'<radialGradient id="neb" cx="14%" cy="3%" r="45%">'
-    f'<stop offset="0" stop-color="{AMBER}" stop-opacity="0.16"/>'
-    f'<stop offset="1" stop-color="{AMBER}" stop-opacity="0"/></radialGradient>'
-    f'<radialGradient id="neb2" cx="90%" cy="52%" r="40%">'
-    f'<stop offset="0" stop-color="{CYAN}" stop-opacity="0.08"/>'
-    f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></radialGradient>'
-    '<pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">'
-    '<rect width="4" height="1" fill="#000" opacity="0.15"/></pattern>'
+    f'<radialGradient id="neb" cx="14%" cy="3%" r="45%"><stop offset="0" stop-color="{AMBER}" stop-opacity="0.16"/><stop offset="1" stop-color="{AMBER}" stop-opacity="0"/></radialGradient>'
+    f'<radialGradient id="neb2" cx="90%" cy="52%" r="40%"><stop offset="0" stop-color="{CYAN}" stop-opacity="0.08"/><stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></radialGradient>'
+    '<pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity="0.15"/></pattern>'
     '</defs>')
 add(f'<rect width="{W}" height="{H}" fill="url(#sky)"/>')
-add(f'<rect width="{W}" height="{H}" fill="url(#neb)"/>')
-add(f'<rect width="{W}" height="{H}" fill="url(#neb2)"/>')
+add(f'<rect width="{W}" height="{H}" fill="url(#neb)"/><rect width="{W}" height="{H}" fill="url(#neb2)"/>')
 
-# continuous starfield across whole canvas
+# continuous twinkling starfield (CSS)
 random.seed(42)
 for _ in range(int(W*H/2600)):
     x, y = random.randint(0, W-2), random.randint(0, H-2)
     big = random.random() < 0.14
     sz = 2 if big else 1
     col = AMBER if (big and random.random() < 0.5) else STAR
-    base = round(random.uniform(0.18, 0.6), 2)
     dur = round(random.uniform(1.8, 4.2), 2)
-    beg = round(random.uniform(0, 4), 2)
-    add(f'<rect x="{x}" y="{y}" width="{sz}" height="{sz}" fill="{col}" opacity="{base}">'
-        f'<animate attributeName="opacity" values="{base};{round(min(1,base+0.35),2)};{base}" '
-        f'dur="{dur}s" begin="{beg}s" repeatCount="indefinite"/></rect>')
+    delay = round(random.uniform(0, 4), 2)
+    add(f'<rect x="{x}" y="{y}" width="{sz}" height="{sz}" fill="{col}" '
+        f'style="animation:tw {dur}s ease-in-out infinite;animation-delay:-{delay}s"/>')
 
-# shooting stars (hero region)
-for sx, sy, dx, dy, delay in [(140, 40, 90, 42, 2.0), (560, 66, -74, 34, 7.5), (300, 168, 82, -28, 12.0)]:
-    add(f'<line x1="{sx}" y1="{sy}" x2="{sx-dx*0.3:.0f}" y2="{sy-dy*0.3:.0f}" stroke="{STAR}" '
-        f'stroke-width="1.5" opacity="0">'
-        f'<animate attributeName="opacity" values="0;0.9;0" dur="1s" begin="{delay}s" '
-        f'repeatCount="indefinite" keyTimes="0;0.3;1"/>'
-        f'<animateTransform attributeName="transform" type="translate" values="0 0;{dx} {dy}" '
-        f'dur="1s" begin="{delay}s" repeatCount="indefinite"/></line>')
+# shooting stars (CSS translate)
+for sx, sy, dx, dy, dur, delay in [(150,40,120,52,7,0),(560,66,-150,68,9,3.2),(300,168,150,-52,8,5.6)]:
+    add(f'<line x1="{sx}" y1="{sy}" x2="{sx-dx*0.22:.0f}" y2="{sy-dy*0.22:.0f}" stroke="{STAR}" stroke-width="1.5" '
+        f'style="--dx:{dx}px;--dy:{dy}px;opacity:0;animation:shoot {dur}s linear infinite;animation-delay:-{delay}s"/>')
 
-# section dividers
 for yy in (Y_STACK, Y_STATS, Y_NOW, Y_FOOT):
     add(f'<line x1="0" y1="{yy}" x2="{W}" y2="{yy}" stroke="#1a1a3a" stroke-width="1"/>')
 
 # ---------- HERO ----------
 title = "FELIPE OLIVEIRA"
-p = 8
-tw = (len(title)*6 - 1)*p
-x0 = (W - tw)//2
+p = 8; tw = (len(title)*6-1)*p; x0 = (W-tw)//2
 glyphs(title, p, x0, 74, AMBER, shadow=MAGENTA, hi="#ffe0a8")
-# rocket
 rp, rx, ry = 7, 690, 20
-add(f'<g><animateTransform attributeName="transform" type="translate" '
-    f'values="{rx} {ry};{rx} {ry-9};{rx} {ry}" dur="3.4s" repeatCount="indefinite" '
-    f'calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>')
+add(f'<g transform="translate({rx},{ry})"><g style="animation:bob 3.4s ease-in-out infinite">')
 for r, row in enumerate(ROCKET):
     for c, k in enumerate(row):
         if k in ROCKET_PAL:
             add(f'<rect x="{c*rp}" y="{r*rp}" width="{rp}" height="{rp}" fill="{ROCKET_PAL[k]}"/>')
-add(f'<rect x="{2*rp}" y="{9*rp}" width="{rp}" height="{rp}" fill="{AMBER}">'
-    f'<animate attributeName="opacity" values="0.2;0.9;0.2" dur="0.4s" repeatCount="indefinite"/>'
-    f'<animate attributeName="height" values="{rp};{rp*2};{rp}" dur="0.4s" repeatCount="indefinite"/></rect>')
-add('</g>')
+add(f'<rect x="{2*rp}" y="{9*rp}" width="{rp}" height="{rp}" fill="{AMBER}" style="animation:flick .5s ease-in-out infinite"/>')
+add('</g></g>')
 sy = 74 + 7*p + 26
 add(f'<rect x="{x0}" y="{sy-14}" width="{tw}" height="2" fill="{CYAN}" opacity="0.5"/>')
-add(f'<text x="{W//2}" y="{sy+2}" text-anchor="middle" font-family="{MONO}" font-size="13" '
-    f'letter-spacing="4" fill="{CYAN}">B A C K E N D&#160;&#160;E N G I N E E R</text>')
-add(f'<text x="{W//2}" y="{sy+22}" text-anchor="middle" font-family="{MONO}" font-size="10" '
-    f'letter-spacing="2" fill="{MUTED}">// payments &#183; billing &#183; distributed systems&#160;&#160;&#9749;</text>')
+add(f'<text x="{W//2}" y="{sy+2}" text-anchor="middle" font-family="{MONO}" font-size="13" letter-spacing="4" fill="{CYAN}">B A C K E N D&#160;&#160;E N G I N E E R</text>')
+add(f'<text x="{W//2}" y="{sy+22}" text-anchor="middle" font-family="{MONO}" font-size="10" letter-spacing="2" fill="{MUTED}">// payments &#183; billing &#183; distributed systems&#160;&#160;&#9749;</text>')
 
 # ---------- STACK ----------
 heading(40, Y_STACK+42, "const", "stack = [")
@@ -187,69 +176,73 @@ add(f'<text x="40" y="{yy+14}" font-family="{MONO}" font-size="15" font-weight="
 
 # ---------- STATS ----------
 heading(40, Y_STATS+42, "git", "--stats")
-tw2 = (W - 80 - 3*16) / 4
-tx = 40
+tw2 = (W-80-3*16)/4; tx = 40
 for num, lbl, fire in [(f"{data['total']:,}".replace(",", " "), "CONTRIBUTIONS", True),
                        (data["longest"], "LONGEST STREAK", True),
                        (data["repos"], "REPOSITORIES", False),
                        (data["followers"], "FOLLOWERS", False)]:
     tile(tx, Y_STATS+58, int(tw2), num, lbl, fire)
     tx += tw2 + 16
-# contribution grid (real data) with a snake that eats the cells
+
+# --- contribution grid + smart snake ---
 gx, gy = 40, Y_STATS + 150
-cell, gap = 11, 3
-step = cell + gap
+cell, gap = 11, 3; step = cell + gap
 NW = len(data["weeks"])
-EMPTY = "#12122e"
 def level(n):
     if n == 0: return EMPTY
     if n <= 3: return "#4d3413"
     if n <= 9: return "#8a5a1e"
     if n <= 20: return "#cc8a34"
     return AMBER
+def center(wi, di): return (gx + wi*step + cell/2, gy + di*step + cell/2)
 
-# serpentine path over the 7 x NW lattice (row 0 →, row 1 ←, ...)
-N_SEG, SPACING, DUR = 5, 1, 16.0
-P = 7 * NW
-cellT = DUR / P
-order, pts = [], []
-for di in range(7):
-    cols = range(NW) if di % 2 == 0 else range(NW - 1, -1, -1)
-    for wi in cols:
-        order.append((wi, di))
-        pts.append((gx + wi*step + cell/2, gy + di*step + cell/2))
-kindex = {wd: k for k, wd in enumerate(order)}
-path_d = "M " + " L ".join(f"{x:.0f},{y:.0f}" for x, y in pts)
-
-# cells — each lit cell "empties" the instant the snake head passes it
+filled = []   # (wi, di, color, cx, cy)
 for wi, wk in enumerate(data["weeks"]):
     for di, dd in enumerate(wk["contributionDays"]):
         col = level(dd["contributionCount"])
         px, py = gx + wi*step, gy + di*step
         if col == EMPTY:
             add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{EMPTY}"/>')
-            continue
-        k = kindex.get((wi, di), 0)
-        p = ((k - (N_SEG - 1)*SPACING) % P) / P          # phase when head arrives
-        p1 = min(max(p - 0.010, 0.001), 0.93)
-        p2 = min(max(p, p1 + 0.001), 0.95)
-        p3 = min(p2 + 0.05, 0.99)
-        add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}">'
-            f'<animate attributeName="fill" dur="{DUR}s" repeatCount="indefinite" '
-            f'keyTimes="0;{p1:.3f};{p2:.3f};{p3:.3f};1" '
-            f'values="{col};{col};{EMPTY};{col};{col}"/></rect>')
+        else:
+            cx, cy = center(wi, di)
+            filled.append((wi, di, col, cx, cy, px, py))
 
-# the snake, on top of the grid
+# nearest-neighbour tour over filled cells (snake weaves through real contributions)
+n = len(filled)
+cx0 = [f[3] for f in filled]; cy0 = [f[4] for f in filled]
+used = [False]*n
+cur = min(range(n), key=lambda j: cx0[j] + cy0[j])   # start top-left-most
+tour = [cur]; used[cur] = True
+for _ in range(n-1):
+    bx, by = cx0[cur], cy0[cur]
+    best, bd = -1, 1e18
+    for j in range(n):
+        if used[j]: continue
+        d = (bx-cx0[j])**2 + (by-cy0[j])**2
+        if d < bd: bd, best = d, j
+    tour.append(best); used[best] = True; cur = best
+
+# emit filled cells with an "eaten" dip timed to when the head arrives
+N_SEG, cellT = 6, DUR/max(n, 1)
+lead = (N_SEG-1)*cellT
+for order_pos, j in enumerate(tour):
+    wi, di, col, cx, cy, px, py = filled[j]
+    phase = ((order_pos - (N_SEG-1)) % n) / n          # 0..1 head-arrival
+    delay = -(((1-phase)*DUR) % DUR)
+    add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}" '
+        f'style="animation:eat {DUR}s linear infinite;animation-delay:{delay:.2f}s"/>')
+
+# motion path through the tour
+path_d = "M " + " L ".join(f"{cx0[j]:.0f},{cy0[j]:.0f}" for j in tour)
 for i in range(N_SEG):
-    begin = -((N_SEG - 1 - i) * SPACING * cellT)
+    delay = -((N_SEG-1-i) * cellT)
     if i == 0:
-        add(f'<g><animateMotion path="{path_d}" dur="{DUR}s" repeatCount="indefinite" begin="{begin:.3f}s"/>'
+        add(f'<g class="seg" style="offset-path:path(\'{path_d}\');animation-delay:{delay:.2f}s">'
             f'<rect x="{-cell/2-2:.0f}" y="{-cell/2-2:.0f}" width="{cell+4}" height="{cell+4}" rx="4" fill="{AMBER}" opacity="0.35"/>'
             f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" fill="#ffe0a8"/></g>')
     else:
-        add(f'<g><animateMotion path="{path_d}" dur="{DUR}s" repeatCount="indefinite" begin="{begin:.3f}s"/>'
-            f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" '
-            f'fill="{AMBER}" opacity="{round(1 - i*0.15, 2)}"/></g>')
+        add(f'<g class="seg" style="offset-path:path(\'{path_d}\');animation-delay:{delay:.2f}s">'
+            f'<rect x="{-cell/2:.0f}" y="{-cell/2:.0f}" width="{cell}" height="{cell}" rx="3" fill="{AMBER}" opacity="{round(1-i*0.13,2)}"/></g>')
 
 # ---------- NOW ----------
 heading(40, Y_NOW+42, "whoami", "--now")
@@ -265,20 +258,28 @@ for ic, txt in lines:
     add(f'<text x="76" y="{yy}" font-family="{MONO}" font-size="13.5" fill="{INK}">{esc(txt)}</text>')
     yy += 30
 
-# ---------- FOOTER ----------
+# ---------- FOOTER (animated fuel gauge) ----------
 bx, by, bw = 250, Y_FOOT+34, 220
-seg = bw/8
+seg = bw/8; filledn = int(0.78*8)
 for i in range(8):
-    col = AMBER if i < int(0.78*8) else "#23233f"
-    add(f'<rect x="{bx + i*seg + 1:.0f}" y="{by}" width="{seg-3:.0f}" height="12" fill="{col}"/>')
+    if i < filledn:
+        add(f'<rect x="{bx+i*seg+1:.0f}" y="{by}" width="{seg-3:.0f}" height="12" fill="{AMBER}" '
+            f'style="animation:fuel 1.8s ease-in-out infinite;animation-delay:-{i*0.18:.2f}s"/>')
+    else:
+        add(f'<rect x="{bx+i*seg+1:.0f}" y="{by}" width="{seg-3:.0f}" height="12" fill="#23233f"/>')
 add(f'<text x="{bx}" y="{by-4}" font-family="{MONO}" font-size="10" letter-spacing="2" fill="{MUTED}">FUEL STATUS: COFFEE</text>')
 add(f'<text x="{bx+bw+14}" y="{by+11}" font-family="{MONO}" font-size="11" fill="{AMBER}">78%</text>')
-add(f'<text x="{bx+bw+52}" y="{by+11}" font-family="{MONO}" font-size="11" fill="{MUTED}">— safe for launch ☕</text>')
+add(f'<text x="{bx+bw+52}" y="{by+11}" font-family="{MONO}" font-size="11" fill="{MUTED}">— safe for launch</text>')
+# animated steam over a coffee cup
+cup = bx + bw + 190
+for k in range(3):
+    add(f'<circle cx="{cup+k*5}" cy="{by-2}" r="1.6" fill="{STAR}" '
+        f'style="opacity:0;animation:steam 2.2s ease-in-out infinite;animation-delay:-{k*0.5:.1f}s"/>')
+add(f'<text x="{cup-4}" y="{by+12}" font-size="14">&#9749;</text>')
 
-# overlay
 add(f'<rect width="{W}" height="{H}" fill="url(#scan)"/>')
 add(f'<rect x="1" y="1" width="{W-2}" height="{H-2}" fill="none" stroke="#2a2a55" stroke-width="2" rx="4"/>')
 add('</svg>')
 
 open(OUTP, "w").write("\n".join(s))
-print(f"wrote {OUTP} ({len('\n'.join(s))} bytes) — {data['total']} contributions, longest {data['longest']}")
+print(f"wrote {OUTP} ({len(chr(10).join(s))} bytes) — {n} filled cells, {data['total']} contributions")

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/ImFelipeOliveira/ImFelipeOliveira/main/assets/profile.svg" alt="Felipe Oliveira — Backend Engineer" width="100%" />
+<img src="https://raw.githubusercontent.com/ImFelipeOliveira/ImFelipeOliveira/main/assets/profile.svg?v=2" alt="Felipe Oliveira — Backend Engineer" width="100%" />
 
 <br/><br/>
 
