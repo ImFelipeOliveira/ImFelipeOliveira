@@ -1067,13 +1067,13 @@
 <text x="40" y="558" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" font-weight="700"><tspan fill="#f0a742">&gt; git</tspan><tspan fill="#4ad9e4"> --stats</tspan></text>
 <line x1="160" y1="553" x2="780" y2="553" stroke="#4ad9e4" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="4 4"/>
 <rect x="40" y="574" width="173" height="72" rx="4" fill="#0e0e26" stroke="#2a2a55" stroke-width="1.5"/>
-<text x="126" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#f0a742">4 314</text>
+<text x="126" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#f0a742">4 315</text>
 <text x="126" y="632" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10" letter-spacing="1" fill="#8a8ac0">CONTRIBUTIONS</text>
 <rect x="229.0" y="574" width="173" height="72" rx="4" fill="#0e0e26" stroke="#2a2a55" stroke-width="1.5"/>
 <text x="316" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#f0a742">46</text>
 <text x="316" y="632" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10" letter-spacing="1" fill="#8a8ac0">LONGEST STREAK</text>
 <rect x="418.0" y="574" width="173" height="72" rx="4" fill="#0e0e26" stroke="#2a2a55" stroke-width="1.5"/>
-<text x="504" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#e8ecff">16</text>
+<text x="504" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#e8ecff">14</text>
 <text x="504" y="632" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10" letter-spacing="1" fill="#8a8ac0">REPOSITORIES</text>
 <rect x="607.0" y="574" width="173" height="72" rx="4" fill="#0e0e26" stroke="#2a2a55" stroke-width="1.5"/>
 <text x="694" y="612" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="26" font-weight="800" fill="#e8ecff">10</text>
@@ -1191,12 +1191,12 @@
 <rect x="250" y="736" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="250" y="750" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="264" y="666" width="11" height="11" rx="2" fill="#12122e"/>
-<rect x="264" y="680" width="11" height="11" rx="2" fill="#cc8a34"/>
+<rect x="264" y="680" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="264" y="694" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="0.6s" repeatCount="indefinite"/></rect>
 <rect x="264" y="708" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="264" y="722" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="264" y="736" width="11" height="11" rx="2" fill="#8a5a1e"/>
-<rect x="264" y="750" width="11" height="11" rx="2" fill="#4d3413"/>
+<rect x="264" y="750" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="278" y="666" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="278" y="680" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="278" y="694" width="11" height="11" rx="2" fill="#4d3413"/>
@@ -1255,7 +1255,7 @@
 <rect x="376" y="750" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="390" y="666" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="390" y="680" width="11" height="11" rx="2" fill="#cc8a34"/>
-<rect x="390" y="694" width="11" height="11" rx="2" fill="#4d3413"/>
+<rect x="390" y="694" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="390" y="708" width="11" height="11" rx="2" fill="#cc8a34"/>
 <rect x="390" y="722" width="11" height="11" rx="2" fill="#cc8a34"/>
 <rect x="390" y="736" width="11" height="11" rx="2" fill="#8a5a1e"/>
@@ -1315,14 +1315,14 @@
 <rect x="502" y="708" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="502" y="722" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="502" y="736" width="11" height="11" rx="2" fill="#8a5a1e"/>
-<rect x="502" y="750" width="11" height="11" rx="2" fill="#12122e"/>
+<rect x="502" y="750" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="516" y="666" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="516" y="680" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="1.8s" repeatCount="indefinite"/></rect>
 <rect x="516" y="694" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="516" y="708" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="516" y="722" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="516" y="736" width="11" height="11" rx="2" fill="#4d3413"/>
-<rect x="516" y="750" width="11" height="11" rx="2" fill="#4d3413"/>
+<rect x="516" y="750" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="530" y="666" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="530" y="680" width="11" height="11" rx="2" fill="#cc8a34"/>
 <rect x="530" y="694" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="0.0s" repeatCount="indefinite"/></rect>
@@ -1330,7 +1330,7 @@
 <rect x="530" y="722" width="11" height="11" rx="2" fill="#8a5a1e"/>
 <rect x="530" y="736" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="0.0s" repeatCount="indefinite"/></rect>
 <rect x="530" y="750" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="0.0s" repeatCount="indefinite"/></rect>
-<rect x="544" y="666" width="11" height="11" rx="2" fill="#12122e"/>
+<rect x="544" y="666" width="11" height="11" rx="2" fill="#4d3413"/>
 <rect x="544" y="680" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="544" y="694" width="11" height="11" rx="2" fill="#cc8a34"/>
 <rect x="544" y="708" width="11" height="11" rx="2" fill="#8a5a1e"/>
@@ -1443,6 +1443,7 @@
 <rect x="754" y="736" width="11" height="11" rx="2" fill="#f0a742"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" begin="0.6s" repeatCount="indefinite"/></rect>
 <rect x="754" y="750" width="11" height="11" rx="2" fill="#12122e"/>
 <rect x="768" y="666" width="11" height="11" rx="2" fill="#cc8a34"/>
+<rect x="768" y="680" width="11" height="11" rx="2" fill="#12122e"/>
 <text x="40" y="834" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15" font-weight="700"><tspan fill="#f0a742">&gt; whoami</tspan><tspan fill="#4ad9e4"> --now</tspan></text>
 <line x1="169" y1="829" x2="780" y2="829" stroke="#4ad9e4" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="4 4"/>
 <text x="44" y="870" font-size="16">🛰</text>
