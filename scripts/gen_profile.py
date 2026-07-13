@@ -7,7 +7,7 @@ so it weaves through real contributions and skips empty days.
 
 Reads assets/data.json (scripts/fetch_data.sh) -> writes assets/profile.svg.
 """
-import json, random, os
+import json, random, os, math
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "assets", "data.json")
@@ -200,9 +200,8 @@ for wi, wk in enumerate(data["weeks"]):
     for di, dd in enumerate(wk["contributionDays"]):
         col = level(dd["contributionCount"])
         px, py = gx + wi*step, gy + di*step
-        if col == EMPTY:
-            add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{EMPTY}"/>')
-        else:
+        add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{EMPTY}"/>')
+        if col != EMPTY:
             cx, cy = center(wi, di)
             filled.append((wi, di, col, cx, cy, px, py))
 
@@ -221,17 +220,22 @@ for _ in range(n-1):
         if d < bd: bd, best = d, j
     tour.append(best); used[best] = True; cur = best
 
-# each filled cell empties the instant the head reaches it and STAYS empty
-# until the tour restarts (per-cell keyframe = step at that cell's arrival %).
+# offset-distance advances by PATH LENGTH, so a cell must empty at its
+# cumulative-length fraction — not its ordinal index — or the vanishing runs
+# ahead of / behind the head. Fade opacity to reveal the empty backdrop, and
+# hold it empty until the loop resets. Head is the timing reference (delay 0).
 N_SEG, cellT = 6, DUR/max(n, 1)
+tpts = [(filled[j][3], filled[j][4]) for j in tour]
+cum = [0.0]*n
+for i in range(1, n):
+    cum[i] = cum[i-1] + math.hypot(tpts[i][0]-tpts[i-1][0], tpts[i][1]-tpts[i-1][1])
+total = cum[-1] or 1.0
 kf, cellrects = [], []
 for order_pos, j in enumerate(tour):
     wi, di, col, cx, cy, px, py = filled[j]
-    phase = max(0.002, (order_pos - (N_SEG-1)) / n)     # head-arrival fraction
-    p1 = round(phase*100, 2)
-    p2 = round(min(p1 + 0.05, 99.9), 2)
-    kf.append(f'@keyframes e{order_pos}{{0%{{fill:{col}}}{p1}%{{fill:{col}}}'
-              f'{p2}%{{fill:{EMPTY}}}100%{{fill:{EMPTY}}}}}')
+    p1 = round(min(cum[order_pos]/total*100, 99.8), 2)
+    p2 = round(min(p1 + 0.1, 99.9), 2)
+    kf.append(f'@keyframes e{order_pos}{{0%,{p1}%{{opacity:1}}{p2}%,100%{{opacity:0}}}}')
     cellrects.append(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}" '
                      f'style="animation:e{order_pos} {DUR}s linear infinite"/>')
 add('<style>' + ''.join(kf) + '</style>')
@@ -241,7 +245,7 @@ for r in cellrects:
 # motion path through the tour
 path_d = "M " + " L ".join(f"{cx0[j]:.0f},{cy0[j]:.0f}" for j in tour)
 for i in range(N_SEG):
-    delay = -((N_SEG-1-i) * cellT)
+    delay = i * cellT   # head (i=0) is the reference; body segments trail it
     if i == 0:
         add(f'<g class="seg" style="offset-path:path(\'{path_d}\');animation-delay:{delay:.2f}s">'
             f'<rect x="{-cell/2-2:.0f}" y="{-cell/2-2:.0f}" width="{cell+4}" height="{cell+4}" rx="4" fill="{AMBER}" opacity="0.35"/>'
