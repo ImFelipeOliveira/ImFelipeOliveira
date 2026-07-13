@@ -2,7 +2,16 @@
 
 <img src="https://raw.githubusercontent.com/ImFelipeOliveira/ImFelipeOliveira/main/assets/profile.svg" alt="Felipe Oliveira — Backend Engineer" width="100%" />
 
+<br/><br/>
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=imfelipeoliveira&theme=gruvbox" alt="profile summary" width="82%" />
+
 <br/>
+
+<img height="185" src="https://github-readme-streak-stats.herokuapp.com/?user=imfelipeoliveira&hide_border=true&background=1D2021&ring=F0A742&fire=FE8019&currStreakNum=F0A742&currStreakLabel=F0A742&sideNums=EBDBB2&sideLabels=83A598&dates=928374&stroke=3C3836" alt="streak" />
+<img height="185" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=imfelipeoliveira&theme=gruvbox" alt="languages" />
+
+<br/><br/>
 
 <a href="mailto:flipeaz342@gmail.com"><img src="https://img.shields.io/badge/email-flipeaz342@gmail.com-1D2021?style=flat-square&logo=gmail&logoColor=f0a742&labelColor=f0a742&color=1D2021" alt="email" /></a>
 &nbsp;
