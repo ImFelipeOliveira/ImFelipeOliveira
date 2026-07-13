@@ -98,7 +98,6 @@ add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="
 # ---- CSS (GitHub animates CSS keyframes in <img> SVGs; it ignores SMIL) ----
 add('<style>'
     '@keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}'
-    '@keyframes eat{0%{opacity:.1}7%{opacity:1}100%{opacity:1}}'
     '@keyframes move{from{offset-distance:0%}to{offset-distance:100%}}'
     '@keyframes shoot{0%{opacity:0;transform:translate(0,0)}12%{opacity:.95}42%{opacity:0}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}'
     '@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}'
@@ -222,15 +221,22 @@ for _ in range(n-1):
         if d < bd: bd, best = d, j
     tour.append(best); used[best] = True; cur = best
 
-# emit filled cells with an "eaten" dip timed to when the head arrives
+# each filled cell empties the instant the head reaches it and STAYS empty
+# until the tour restarts (per-cell keyframe = step at that cell's arrival %).
 N_SEG, cellT = 6, DUR/max(n, 1)
-lead = (N_SEG-1)*cellT
+kf, cellrects = [], []
 for order_pos, j in enumerate(tour):
     wi, di, col, cx, cy, px, py = filled[j]
-    phase = ((order_pos - (N_SEG-1)) % n) / n          # 0..1 head-arrival
-    delay = -(((1-phase)*DUR) % DUR)
-    add(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}" '
-        f'style="animation:eat {DUR}s linear infinite;animation-delay:{delay:.2f}s"/>')
+    phase = max(0.002, (order_pos - (N_SEG-1)) / n)     # head-arrival fraction
+    p1 = round(phase*100, 2)
+    p2 = round(min(p1 + 0.05, 99.9), 2)
+    kf.append(f'@keyframes e{order_pos}{{0%{{fill:{col}}}{p1}%{{fill:{col}}}'
+              f'{p2}%{{fill:{EMPTY}}}100%{{fill:{EMPTY}}}}}')
+    cellrects.append(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="2" fill="{col}" '
+                     f'style="animation:e{order_pos} {DUR}s linear infinite"/>')
+add('<style>' + ''.join(kf) + '</style>')
+for r in cellrects:
+    add(r)
 
 # motion path through the tour
 path_d = "M " + " L ".join(f"{cx0[j]:.0f},{cy0[j]:.0f}" for j in tour)
